@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:flowable="http://flowable.org/bpmn"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             targetNamespace="http://www.flowable.org/processdef">
+
+
+    <!-- 流程定义信息
+    id：在数据库里会存在key_字段中
+    name：流程名字
+    -->
+    <process id="data" name="审核流程">
+        <!--开始事件：流程的起点
+        id：开始节点的ID
+        name：开始节点的名称
+        outgoing：记录连线的顺序流，outgoing表示从该节点输出的线
+        -->
+        <startEvent id="startNode1" name="开始">
+            <outgoing>Flow_0ksehsm</outgoing>
+        </startEvent>
+
+        <!--结束事件：流程的终点
+        id：结束节点的ID
+        name：结束节点的名称
+        incoming：记录连线的顺序流，incoming表示输入该节点的线
+        -->
+        <endEvent id="Event_08rzeth" name="结束">
+            <incoming>Flow_18upiqx</incoming>
+        </endEvent>
+
+        <!--顺序流：执行时会从一个节点流向另一个节点
+        id：顺序流的ID
+        sourceRef：源头节点ID
+        targetRef：目标节点ID
+        -->
+        <sequenceFlow id="Flow_0ksehsm" sourceRef="startNode1" targetRef="Activity_01fk1po" />
+        <sequenceFlow id="Flow_1huwgzm" sourceRef="Activity_01fk1po" targetRef="Activity_0ipmowu" />
+        <sequenceFlow id="Flow_18upiqx" sourceRef="Activity_0ipmowu" targetRef="Event_08rzeth" />
+
+
+        <!--用户任务：需要指定用户来执行
+        flowable:assignee：任务受理人，这里先写为固定，设受理人的用户ID为1
+        incoming：记录连线的顺序流，incoming表示输入该节点的线
+        outgoing：记录连线的顺序流，outgoing表示从该节点输出的线
+        -->
+        <userTask id="Activity_01fk1po" name="申请" flowable:assignee="1">
+            <incoming>Flow_0ksehsm</incoming>
+            <outgoing>Flow_1huwgzm</outgoing>
+        </userTask>
+
+        <!--用户任务：需要指定用户来执行
+        flowable:assignee：任务受理人，这里先写为固定，设受理人的用户ID为2
+        -->
+        <userTask id="Activity_0ipmowu" name="审核" flowable:assignee="2">
+            <!--任务监听事件：taskListener
+
+            event： 事件执行的时刻（包括：
+                   create（创建）：当任务已经创建，并且所有任务参数都已经设置时触发。
+                   assignment（指派）：当任务已经指派给某人时触发。请注意：当流程执行到达用户任务时，在触发create事件之前，会首先触发assignment事件。
+                   complete（完成）：当任务已经完成，从运行时数据中删除前触发。
+                   delete（删除）：在任务即将被删除前触发。请注意任务由completeTask正常完成时也会触发。）
+    任务执行参数：field（可配置多个）
+            -->
+            <extensionElements>
+                <flowable:taskListener class="com.feiyu.Listener.TaskEvent" event="complete">
+                    <flowable:field name="message" stringValue="执行完成" />
+                </flowable:taskListener>
+            </extensionElements>
+            <incoming>Flow_1huwgzm</incoming>
+            <outgoing>Flow_18upiqx</outgoing>
+        </userTask>
+
+    </process>
+
+
+    <!--节点在流程图中的位置，没有前端可不写-->
+    <bpmndi:BPMNDiagram id="BPMNDiagram_flow">
+        <bpmndi:BPMNPlane id="BPMNPlane_flow" bpmnElement="process_fzoauj5k">
+            <bpmndi:BPMNEdge id="Flow_0ksehsm_di" bpmnElement="Flow_0ksehsm">
+                <di:waypoint x="-15" y="190" />
+                <di:waypoint x="70" y="190" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_1huwgzm_di" bpmnElement="Flow_1huwgzm">
+                <di:waypoint x="170" y="190" />
+                <di:waypoint x="260" y="190" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_18upiqx_di" bpmnElement="Flow_18upiqx">
+                <di:waypoint x="360" y="190" />
+                <di:waypoint x="452" y="190" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape id="BPMNShape_startNode1" bpmnElement="startNode1">
+                <omgdc:Bounds x="-45" y="175" width="30" height="30" />
+                <bpmndi:BPMNLabel>
+                    <omgdc:Bounds x="-42" y="212" width="22" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Event_08rzeth_di" bpmnElement="Event_08rzeth">
+                <omgdc:Bounds x="452" y="172" width="36" height="36" />
+                <bpmndi:BPMNLabel>
+                    <omgdc:Bounds x="459" y="215" width="22" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Activity_19z5ig5_di" bpmnElement="Activity_01fk1po">
+                <omgdc:Bounds x="70" y="150" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Activity_09wpg3z_di" bpmnElement="Activity_0ipmowu">
+                <omgdc:Bounds x="260" y="150" width="100" height="80" />
+            </bpmndi:BPMNShape>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+
+</definitions>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+             typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.flowable.org/processdef">
+    <process id="shenhe_request" name="审核请求" isExecutable="true">
+        <startEvent id="startNode1" name="开始">
+            <outgoing>Flow_0ksehsm</outgoing>
+        </startEvent>
+
+        <endEvent id="Event_08rzeth" name="结束">
+            <incoming>Flow_18upiqx</incoming>
+        </endEvent>
+
+        <sequenceFlow id="Flow_0ksehsm" sourceRef="startNode1" targetRef="Activity_0ipmowu" />
+        <sequenceFlow id="Flow_18upiqx" sourceRef="Activity_0ipmowu" targetRef="Event_08rzeth" />
+
+        <userTask id="Activity_0ipmowu" name="审核" flowable:assignee="1">
+            <extensionElements>
+                <flowable:taskListener class="com.feiyu.Listener.TaskEvent" event="complete">
+                    <flowable:field name="message" stringValue="审核成功"/>
+                </flowable:taskListener>
+            </extensionElements>
+
+            <incoming>Flow_1huwgzm</incoming>
+            <outgoing>Flow_18upiqx</outgoing>
+        </userTask>
+
+    </process>
+</definitions>
